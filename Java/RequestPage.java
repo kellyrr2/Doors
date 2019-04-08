@@ -1,4 +1,3 @@
-
 public class RequestPage {
 
 	public Application application;
@@ -9,10 +8,10 @@ public class RequestPage {
 		return application;
 	}
 
-	//  implementation
+	// implementation
 	public Application setApplication(Application app) {
-		application = app;
+		application = setApplication(app.getName(), app.getDescription(), app.getDevelopers(), app.getPlatform(), 
+				app.getVersion(), app.getLink(), app.getPrice());
 		return application;
 	}
-
 }
