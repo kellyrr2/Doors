@@ -34,7 +34,11 @@ public class User extends Visitor {
 
 	private boolean isLoginSuccess() throws Exception {
 
+		FileReader fr = new FileReader("login.txt");
+		
 		Map address = new HashMap();
+		// need to store the login.txt in the address.
+		
 		Iterator<Map.Entry> itr1 = address.entrySet().iterator();
 		boolean match = false;
 		int matches = 0;
