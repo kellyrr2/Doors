@@ -22,9 +22,10 @@ public class Admin extends Visitor {
 
 	private boolean isLoginSuccess() throws Exception {
 		FileReader fr = new FileReader("login.txt");
-
+                
 		Map address = new HashMap();
-
+                // need to store the login.txt on the address
+		
 		// iterating address Map
 		Iterator<Map.Entry> itr1 = address.entrySet().iterator();
 		while (itr1.hasNext()) {
