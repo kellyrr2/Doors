@@ -106,11 +106,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         .wrapper{ width: 350px; padding: 20px; }
     </style>
 </head>
-<body>
+<body >
 
 <nav class="navbar  navbar-inverse" >
          <div class="container-fluid">
                    <ul class="nav navbar-nav">
+                                       <li> <img src="door.png" style="width:50px;height:50px;"></li>
                    <li ><a>Doors</a></li>
                     </ul>
                     </div>

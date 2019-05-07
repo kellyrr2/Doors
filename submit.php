@@ -10,25 +10,25 @@ if (mysqli_connect_errno($mysqli)) {
 
 
 
-$appname = $company = $email= $link = $price = $version= $type ="  ";
+$appname = $company = $email= $link = $price = $version= $type = $icon= $describe1 =" ";
 if($_SERVER["REQUEST_METHOD"] == "POST"){
-
-
 
                     
  $appname = trim($_POST["appname"]);
  $company = trim($_POST["company"]); 
-  $email = trim($_POST["email"]); 
-  $link = trim($_POST["link"]);
+ $email = trim($_POST["email"]); 
+ $link = trim($_POST["link"]);
  $price = trim($_POST["price"]);
  $version = trim($_POST["version"]);
  $type = trim($_POST["type"]);
+ $describe1 = trim($_POST["describe1"]);
+ $icon = trim($_POST["icon"]);
 
 
         // Prepare an insert statement
        
-            $stmt2 = $mysqli->prepare("INSERT INTO app (appname, company, email, link, price, version, type) VALUES (?,?,?,?,?,?,?)");
-            $stmt2->bind_param("sssssss", $param_appname, $param_company, $param_email, $param_link, $param_price, $param_version, $param_type);
+            $stmt2 = $mysqli->prepare("INSERT INTO app (appname, company, email, link, price, version, type,describe1,icon) VALUES (?,?,?,?,?,?,?,?,?)");
+            $stmt2->bind_param("sssssssss", $param_appname, $param_company, $param_email, $param_link, $param_price, $param_version, $param_type, $param_describe1,$param_icon);
             
             // Set parameters
             $param_appname = $appname;
@@ -38,6 +38,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_price = $price;
             $param_version = $version;
             $param_type = $type;
+            $param_describe1 = $describe1;
+            $param_icon = $icon;
             
             // Attempt to execute the prepared statement
             if($stmt2->execute()){
@@ -64,11 +66,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     </style>
 </head>
 
-<body>
+<body style="background-color: rgb(220, 220, 220)">
 
 <nav class="navbar  navbar-inverse" >
          <div class="container-fluid">
                    <ul class="nav navbar-nav">
+                                    <li> <img src="door.png" style="width:50px;height:50px;"></li>
                    <li ><a>Doors</a></li>
                     </ul>
                     </div>
@@ -107,12 +110,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <div class="form-group">
                 <label>type</label>
                 <input type="text" name="type" class="form-control" value="<?php echo $type; ?>">
-            </div>    
+     
+            </div>  
+             <div class="form-group">
+                <label>Icon url</label>
+                <input type="text" name="icon" class="form-control" value="<?php echo $icon; ?>">
+            </div>  
+ 
+            <div class="form-group">
+                <label>describe</label>
+                <textarea  rows="5" cols="40" name="describe1" class="form-control" value="<?php echo $describe1; ?>"></textarea>
 
-          
+              </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Submit">
-                                  <button type="reset"class="btn btn-primary" value="Reset">Reset</button>
+                <button type="reset" class="btn btn-primary" value="Reset">Reset</button>
             </div>
         </form>
 <?php
