@@ -1,6 +1,6 @@
 # Doors
 
-The project is hosted at http://ceclnx01.cec.miamioh.edu/~zhuangm/app/\
+The project is hosted at http://ceclnx01.cec.miamioh.edu/~zhuangm/app/
 In order to make changes clone the repository and make changes on a local repository. Once done push it back to the remote repository. All of the necessary files are in the remote repository and the database has a consistent connection. Run index.php to see the website.
 
 Base Directory:\
