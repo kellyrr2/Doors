@@ -8,18 +8,45 @@ if (mysqli_connect_errno($mysqli)) {
     die;
 }
 
-$id=$company=$icon=$describe1 = $link ="";
+$id=$company=$icon=$describe1 = $link =$comment="";
 
 
      $id = (isset($_GET['id']) ? $_GET['id'] : '');
      $company = (isset($_GET['company']) ? $_GET['company'] : '');    
-          $icon = (isset($_GET['icon']) ? $_GET['icon'] : '');
+     $icon = (isset($_GET['icon']) ? $_GET['icon'] : '');
      $describe1 = (isset($_GET['describe1']) ? $_GET['describe1'] : '');
      $link = (isset($_GET['link']) ? $_GET['link'] : '');
+if(isset($_SESSION["loggedin"])){
+          $user =  htmlspecialchars($_SESSION['username']);
+}
+if($_SERVER["REQUEST_METHOD"] == "POST"){
 
+                    
+ $comment= trim($_POST["comment"]);
+ $appname= trim($_POST["appname"]);
+ $user= trim($_POST["user"]);
+
+
+ $stmt2 = $mysqli->prepare("INSERT INTO appcomment (appname, comment, user) VALUES (?,?,?)");
+            $stmt2->bind_param("sss", $param_appname, $param_comment, $param_user);
+            
+            // Set parameters
+            $param_appname = $appname;
+            $param_comment = $comment;
+            $param_user = $user;
+            // Attempt to execute the prepared statement
+            if($stmt2->execute()){
+                header("location: infor.php");
+            } else{
+                echo "Something went wrong. Please try again later.";
+            }
+        
+          // Close statement
+        $stmt2->close();
+                $mysqli->close();
+}
 ?>
-
-
+      
 
 
 
@@ -79,7 +106,7 @@ echo"<li><a href='submit.php'>Submit App</a></li>";
 </div>
 <div  class="col-sm-10" style="margin-top: -60px;">
        
-        <h4>Describe:</h4>
+        <h4>Description:</h4>
           <p><?php echo $describe1?></p>
         </nav>
      </div>
@@ -90,52 +117,54 @@ echo"<li><a href='submit.php'>Submit App</a></li>";
 
 <div class="container" style="margin-top: 40px;">
     <div class="row">
-        
-         
-
         <div class="col-9">
         <h4>User Comments:</h4>
-    <div class="media">
-    <div class="media-left">
-    <img src="women.jpg" class="img-circle" style="width:60px;">
-         </div>
-    <div class="media-body">
-      <h5>Mary Moe <small><i>05/01/2019</i></small></h5>
-      <p>Great!This is the best game I've ever played!This game brings me a lot of fun!</p>      
-    </div>
-    </div>
-          <hr>
-      <div class="media">
-     <div class="media-left">
-       <img src="http://wprdea.org/image/img_avatar.png" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
-               </div>
-       <div class="media-body">
-      <h5>John Doe <small><i>05/01/2019</i></small></h5>
-      <p>Allow child account to be able to multiplayer without the permisson. if i need permission to even play with my friends then what for i add my friends in xbox</p>      
-    </div>
-</div>
-<hr>
-      <div class="media">
-     <div class="media-left">
-    <img src="http://wprdea.org/image/img_avatar.png" alt="John Doe" class="mr-3 mt-3 rounded-circle" style="width:60px;">
-         </div>
-    <div class="media-body">
-      <h5>Noverber Rain<small><i>05/01/2019</i></small></h5>
-      <p>This new update is great! I would like to mention that in the new villages i dont seem to be able to find any loot in the chests... other than that i think this game is very succesfull and is widely reccommendable! It has grown so quickly and has lots of different features that are really fun and it...</p>      
-    </div>
-     </div>
+<?php 
+$sd =  mysqli_query($mysqli, "SELECT user,reg_date,comment,id FROM appcomment WHERE appname = '$id'");
+    while ($row = mysqli_fetch_assoc($sd)){
+
+        echo  "<div class='media'>";
+    echo "<div class='media-left'>";
+    echo"<img src='http://wprdea.org/image/img_avatar.png' class='img-circle' style='width:60px;'>";
+    echo"</div>";
+         echo"<div class='media-body'>";
+     echo"<h4>";
+          echo $row['user'];
+            echo"&nbsp;&nbsp;<small><i>";
+             echo $row['reg_date']; 
+            echo " </i></small></h4>";
+
+     echo "<p>";
+        echo $row['comment'];
+          echo "</p>" ;  
+if(isset($_SESSION["loggedin"])&&($_SESSION['username']=="123456"||$_SESSION['username'] == $row['user'])){
+ echo "<button class='btn btn-danger'><a href='commentdelete.php?id=".$row['id']." 'style='color:white; text-decoration:none'>Delete</a></button>";
+}
+ 
+     echo "</div>";
+    echo "</div>";
+    echo "<hr>";
+
+}
+?>
+
+
+
+
+
 
 <div id="hide" style ="display:none">
-<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"  target="nm_iframe">
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" target="nm_iframe">
             <div class="form-group">
                 <label><h4>Your Comment</h4></label>
-                <textarea  rows="5" cols="40" name="describe1" class="form-control" value="<?php echo $describe1; ?>"></textarea>
-                   <input type="submit" class="btn btn-primary" value="Submit">
+                                <input type="hidden" name="appname" class="form-control" value="<?php echo $id; ?>"readonly>
+                                          <input type="hidden" name="user" class="form-control" value="<?php echo $user; ?>"readonly>
+                <textarea  rows="5" cols="40" name="comment" class="form-control" value="<?php echo $comment; ?>"></textarea>
+                <input type="submit" class="btn btn-primary" value="Submit" onclick='myFunction()'>
                 <button type="reset" class="btn btn-primary" value="Reset">Reset</button>
             </div>
-</form>
-<iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>    
-
+</form>  
+  <iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>  
 </div>
 
          </div>
@@ -143,16 +172,17 @@ echo"<li><a href='submit.php'>Submit App</a></li>";
   </div>
 
 <ul class="pagination justify-content-end">
-
- <li class="page-item"><a class="page-link"  onclick="myFunction()">Add your comment</a></li>
-
+<?php
+if(isset($_SESSION["loggedin"])){
+echo "<li class='page-item'><a class='page-link'  onclick='myFunction()'>Add your comment</a></li>";
+}
+?>
 </ul>
        
-             </div>
-             </div>
+   </div>
+    </div>
 
 </div>
-
 
 
 
@@ -168,5 +198,6 @@ function myFunction() {
     x.style.display = "none";
   }
 }
+
 </script>
 </html>
